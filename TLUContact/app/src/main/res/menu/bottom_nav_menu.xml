@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_units"
+        android:icon="@drawable/ic_unit_directory"
+        android:title="Danh bạ đơn vị" />
+    <item
+        android:id="@+id/nav_staff"
+        android:icon="@drawable/ic_staff_directory"
+        android:title="Danh bạ CBNV" />
+</menu>

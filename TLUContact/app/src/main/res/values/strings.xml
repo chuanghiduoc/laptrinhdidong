@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TLU Contact</string>
+    <string name="app_logo">TLU Logo</string>
+    <string name="settings">Settings</string>
+    <string name="add_new_item">Add New Contact</string>
+    <string-array name="sort_options">
+        <item>Tên</item>
+        <item>Địa chỉ</item>
+    </string-array>
+    <string name="spinner_prompt_sort">Sắp xếp theo</string>
+
+    <string-array name="sort_options_cbnv">
+        <item>Tên</item>
+        <item>Chức vụ</item>
+    </string-array>
+</resources>

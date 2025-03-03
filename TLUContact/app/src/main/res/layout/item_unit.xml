@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="4dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="3dp"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/cardBackground"
+    app:contentPadding="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/icon_unit"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_unit_icon"
+            android:padding="8dp"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@color/colorPrimaryLight"
+            app:tint="@color/colorPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription"/>
+
+        <TextView
+            android:id="@+id/txt_unit_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="Tên đơn vị"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/textPrimary"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/icon_unit"
+            app:layout_constraintEnd_toStartOf="@id/icon_arrow"
+            app:layout_constraintTop_toTopOf="@id/icon_unit"
+            app:layout_constraintBottom_toTopOf="@+id/txt_unit_phone"/>
+
+        <TextView
+            android:id="@+id/txt_unit_phone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Số điện thoại"
+            android:textSize="14sp"
+            android:textColor="@color/textSecondary"
+            android:layout_marginTop="4dp"
+            android:drawableStart="@drawable/ic_phone_small"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toStartOf="@id/txt_unit_name"
+            app:layout_constraintEnd_toEndOf="@id/txt_unit_name"
+            app:layout_constraintTop_toBottomOf="@id/txt_unit_name"
+            app:drawableTint="@color/textSecondary"/>
+
+        <TextView
+            android:id="@+id/txt_unit_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Địa chỉ"
+            android:textSize="14sp"
+            android:textColor="@color/textSecondary"
+            android:layout_marginTop="4dp"
+            android:drawableStart="@drawable/ic_location_small"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintStart_toStartOf="@id/txt_unit_phone"
+            app:layout_constraintEnd_toEndOf="@id/txt_unit_name"
+            app:layout_constraintTop_toBottomOf="@id/txt_unit_phone"
+            app:drawableTint="@color/textSecondary"/>
+
+        <ImageView
+            android:id="@+id/icon_arrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_right"
+            app:tint="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="ContentDescription"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
