@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:backgroundTint="#fff"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="2dp"
+    app:rippleColor="#33000000"
+    app:strokeColor="#E3F2FD"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#fff"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/ivUnitIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/circle_background"
+            android:contentDescription="Biểu tượng đơn vị"
+            android:padding="8dp"
+            android:src="@drawable/ic_unit"
+            app:tint="#2196F3" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvUnitName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#0D47A1"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="Khoa Công nghệ thông tin" />
+
+            <TextView
+                android:id="@+id/tvUnitCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="#64B5F6"
+                android:textSize="14sp"
+                tools:text="Mã đơn vị: CNTT" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="Xem chi tiết"
+            android:src="@drawable/ic_arrow_right"
+            app:tint="#2196F3" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
