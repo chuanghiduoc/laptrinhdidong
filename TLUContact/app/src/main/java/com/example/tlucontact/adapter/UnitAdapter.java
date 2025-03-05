@@ -125,9 +125,4 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         }
     }
 
-    // Phương thức cập nhật danh sách
-    public void setUnitList(List<Unit> unitList) {
-        this.unitList = unitList;
-        notifyDataSetChanged();
-    }
 }

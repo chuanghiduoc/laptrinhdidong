@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.tlucontact.CBNVFragment;
-import com.example.tlucontact.DonViFragment;
+import com.example.tlucontact.fragment.CBNVFragment;
+import com.example.tlucontact.fragment.DonViFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
     private Fragment[] fragments = new Fragment[2];

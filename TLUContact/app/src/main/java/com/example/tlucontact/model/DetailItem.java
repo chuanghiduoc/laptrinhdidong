@@ -12,10 +12,8 @@ public class DetailItem implements Serializable {
     private String department;
     private String type; // "UNIT" hoặc "STAFF"
 
-    // Constructor không tham số
     public DetailItem() {}
 
-    // Constructor đầy đủ
     public DetailItem(String id, String name, String phone, String email,
                       String address, String position, String department, String type) {
         this.id = id;

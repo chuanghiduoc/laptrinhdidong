@@ -129,9 +129,4 @@ public class CBNVAdapter extends RecyclerView.Adapter<CBNVAdapter.CBNVViewHolder
         }
     }
 
-    // Phương thức cập nhật danh sách
-    public void setCbnvList(List<CBNV> cbnvList) {
-        this.cbnvList = cbnvList;
-        notifyDataSetChanged();
-    }
 }
