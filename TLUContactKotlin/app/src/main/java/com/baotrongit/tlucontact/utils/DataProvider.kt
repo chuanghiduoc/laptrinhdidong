@@ -250,7 +250,25 @@ object DataProvider {
                 email = "d@tlu.edu.vn",
                 phone = "024.3852.4503",
                 avatarUrl = "https://simgbb.com/avatar/Y7j81FmXjwmP.jpg"
-            )
+            ),
+            Student(
+                id = "student_5",
+                fullName = "Lê Thị E",
+                studentCode = "SV005",
+                unitId = "faculty_1",
+                email = "e@tlu.edu.vn",
+                phone = "024.3852.4504",
+                avatarUrl = "https://simgbb.com/avatar/Y7j81FmXjwmP.jpg"
+            ),
+            Student(
+                id = "student_6",
+                fullName = "Trần Văn F",
+                studentCode = "SV006",
+                unitId = "faculty_1",
+                email = "f@tlu.edu.vn",
+                phone = "024.3852.4505",
+                avatarUrl = "https://simgbb.com/avatar/Y7j81FmXjwmP.jpg"
+            ),
             // Thêm các sinh viên khác tại đây
         )
     }

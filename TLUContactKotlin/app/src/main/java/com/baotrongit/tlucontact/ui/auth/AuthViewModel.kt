@@ -10,6 +10,7 @@ import com.baotrongit.tlucontact.data.model.User
 import com.baotrongit.tlucontact.data.repository.AuthRepository
 import com.baotrongit.tlucontact.utils.EmailValidationResult
 import com.baotrongit.tlucontact.utils.PasswordValidationResult
+import com.baotrongit.tlucontact.utils.UserManager
 import com.baotrongit.tlucontact.utils.ValidationUtils
 import kotlinx.coroutines.launch
 
@@ -40,6 +41,8 @@ class AuthViewModel : ViewModel() {
                 userResult.onSuccess { user ->
                     _currentUser.value = user
                     // Lấy thông tin profile chi tiết
+                    UserManager.initialize(user)
+
                     loadUserProfile(user)
                 }.onFailure {
                     // Xử lý lỗi nếu không lấy được thông tin người dùng
@@ -120,19 +123,21 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             val result = authRepository.loginUser(email, password)
             result.onSuccess { firebaseUser ->
-                if (firebaseUser.isEmailVerified) {
+//                if (firebaseUser.isEmailVerified) {
                     val userResult = authRepository.getUserData(firebaseUser.uid)
                     userResult.onSuccess { user ->
                         _currentUser.value = user
+                        UserManager.initialize(user)
+
                         // Lấy thông tin profile chi tiết
                         loadUserProfile(user)
                         _loginResult.value = Result.success(Unit)
                     }.onFailure {
                         _loginResult.value = Result.failure(it)
                     }
-                } else {
-                    _loginResult.value = Result.failure(Exception("Vui lòng xác minh email trước khi đăng nhập"))
-                }
+//                } else {
+//                    _loginResult.value = Result.failure(Exception("Vui lòng xác minh email trước khi đăng nhập"))
+//                }
             }.onFailure {
                 _loginResult.value = Result.failure(it)
             }
@@ -171,6 +176,8 @@ class AuthViewModel : ViewModel() {
                 val userResult = authRepository.getUserData(firebaseUser.uid)
                 userResult.onSuccess { user ->
                     _currentUser.value = user
+                    UserManager.initialize(user)
+
                     loadUserProfile(user)
                 }.onFailure {
                     // Xử lý lỗi
@@ -183,13 +190,14 @@ class AuthViewModel : ViewModel() {
         authRepository.signOut()
         _currentUser.value = null
         _userProfile.value = null
+        UserManager.clear()
     }
 
     fun updateUserProfile(
         fullName: String,
         phoneNumber: String,
         address: String,
-        classId: String,
+        unitId: String,
         position: String,
         photoUrl: String,
         context: Context
@@ -201,7 +209,7 @@ class AuthViewModel : ViewModel() {
             fullName = fullName,
             phoneNumber = phoneNumber,
             address = address,
-            classId = classId,
+            unitId = unitId,
             position = position,
             photoURL = photoUrl
         )
@@ -219,6 +227,9 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    fun isUserLoggedIn(): Boolean {
+        return authRepository.getCurrentUser() != null
+    }
 
 
 }

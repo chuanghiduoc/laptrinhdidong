@@ -34,7 +34,7 @@ public class DonViFragment extends Fragment {
     private View emptyState;
     private List<Unit> allUnitList;
     private List<Unit> filteredUnitList;
-    private String currentSortOption = "Tên";
+    private String currentSortOption = "Họ và tên";
 
     @Nullable
     @Override
@@ -113,7 +113,7 @@ public class DonViFragment extends Fragment {
     }
 
     private void sortList(String sortOption) {
-        if (sortOption.equals("Tên")) {
+        if (sortOption.equals("Họ và tên")) {
             Collections.sort(filteredUnitList, Comparator.comparing(Unit::getName));
         } else if (sortOption.equals("Địa chỉ")) {
             Collections.sort(filteredUnitList, Comparator.comparing(Unit::getAddress));

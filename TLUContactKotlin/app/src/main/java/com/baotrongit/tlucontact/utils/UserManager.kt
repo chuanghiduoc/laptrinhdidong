@@ -1,10 +1,15 @@
 package com.baotrongit.tlucontact.utils
 
+import android.util.Log
 import com.baotrongit.tlucontact.data.model.User
 import com.baotrongit.tlucontact.data.model.UserType
 
 object UserManager {
     private var currentUser: User? = null
+
+    fun initialize(user: User) {
+        currentUser = user
+    }
 
     fun setCurrentUser(user: User) {
         currentUser = user
@@ -20,6 +25,13 @@ object UserManager {
 
     fun isStudent(): Boolean = currentUser?.userType == UserType.STUDENT
 
-    fun getCurrentUserClassId(): String? =
-        if (isStudent()) currentUser?.classId else null
+
+    fun getCurrentUserUnitId(): String? {
+        val unitId = currentUser?.unitId
+        Log.d("UserManager", "getCurrentUserUnitId: $unitId")
+        return unitId
+    }
+    fun clear() {
+        currentUser = null
+    }
 }

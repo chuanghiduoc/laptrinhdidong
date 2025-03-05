@@ -10,4 +10,5 @@ data class Student(
     val address: String? = null,
     val avatarUrl: String? = null,
     val classId: String? = null
+
 )

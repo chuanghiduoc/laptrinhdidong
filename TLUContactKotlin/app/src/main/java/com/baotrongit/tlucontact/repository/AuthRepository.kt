@@ -48,7 +48,8 @@ class AuthRepository {
                 phoneNumber = "",
                 address = "", // Địa chỉ có thể để trống cho đến khi cập nhật
                 userType = userType,
-                isEmailVerified = firebaseUser.isEmailVerified,
+//                isEmailVerified = firebaseUser.isEmailVerified,
+                isEmailVerified = true,
                 profileId = studentId, // Mã cán bộ hoặc mã sinh viên
                 createdAt = Timestamp.now(),
                 lastUpdated = Timestamp.now()
@@ -58,7 +59,7 @@ class AuthRepository {
             usersCollection.document(firebaseUser.uid).set(user).await()
 
             // Gửi email xác minh
-            firebaseUser.sendEmailVerification().await()
+//            firebaseUser.sendEmailVerification().await()
 
             Result.success(firebaseUser)
         } catch (e: Exception) {

@@ -34,7 +34,7 @@ public class CBNVFragment extends Fragment {
     private View emptyState;
     private List<CBNV> allCbnvList;
     private List<CBNV> filteredCbnvList;
-    private String currentSortOption = "Tên";
+    private String currentSortOption = "Họ và tên";
 
     @Nullable
     @Override
@@ -116,7 +116,7 @@ public class CBNVFragment extends Fragment {
     }
 
     private void sortList(String sortOption) {
-        if (sortOption.equals("Tên")) {
+        if (sortOption.equals("Họ và tên")) {
             Collections.sort(filteredCbnvList, Comparator.comparing(CBNV::getName));
         } else if (sortOption.equals("Chức vụ")) {
             Collections.sort(filteredCbnvList, Comparator.comparing(CBNV::getPosition));

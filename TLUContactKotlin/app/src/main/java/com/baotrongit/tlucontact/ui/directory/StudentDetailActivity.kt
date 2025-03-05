@@ -30,7 +30,6 @@ class StudentDetailActivity : AppCompatActivity() {
             return
         }
 
-        // Load student details
         loadStudentDetails(studentId)
         setupToolbar()
         setupActionButtons()
@@ -45,27 +44,22 @@ class StudentDetailActivity : AppCompatActivity() {
     }
 
     private fun loadStudentDetails(studentId: String) {
-        // Find student by ID
         student = DataProvider.getStudents().find { it.id == studentId }
 
-        // Check if student is null
         if (student == null) {
             finish()
             return
         }
 
-        // Check permission to view details
         if (!canViewStudentDetails()) {
             Toast.makeText(this, "Bạn không có quyền xem thông tin này", Toast.LENGTH_LONG).show()
             finish()
             return
         }
 
-        // Update UI with student information
         binding.tvStudentId.text = "Mã sinh viên: ${student!!.studentCode}"
         binding.tvStudentName.text = student!!.fullName
 
-        // Set contact information
         binding.layoutEmail.visibility = if (student!!.email != null) {
             binding.tvEmail.text = student!!.email
             View.VISIBLE
@@ -80,7 +74,6 @@ class StudentDetailActivity : AppCompatActivity() {
             View.GONE
         }
 
-        // Set address
         binding.layoutAddress.visibility = if (student!!.address != null) {
             binding.tvAddress.text = student!!.address
             View.VISIBLE
@@ -88,11 +81,9 @@ class StudentDetailActivity : AppCompatActivity() {
             View.GONE
         }
 
-        // Set unit name
         val unitName = DataProvider.getUnits().find { it.id == student!!.unitId }?.name ?: "Không xác định"
         binding.tvUnitName.text = unitName
 
-        // Display avatar if available
         if (student!!.avatarUrl != null) {
             binding.ivStudentAvatar.clearColorFilter()
             Glide.with(this)
@@ -108,13 +99,13 @@ class StudentDetailActivity : AppCompatActivity() {
 
     private fun canViewStudentDetails(): Boolean {
         if (UserManager.isStaff()) {
-            return true // Staff can view all
+            return true
         }
 
-        // Students can only view their own details or those of students in their class
-        val currentUserClassId = UserManager.getCurrentUserClassId()
-        return currentUserClassId != null && student?.classId == currentUserClassId
+        val currentUserUnitId = UserManager.getCurrentUserUnitId()
+        return currentUserUnitId != null && student?.unitId == currentUserUnitId
     }
+
 
     private fun setupActionButtons() {
         binding.btnCall.setOnClickListener {
@@ -138,7 +129,7 @@ class StudentDetailActivity : AppCompatActivity() {
 
         binding.btnUnit.setOnClickListener {
             val intent = Intent(this, UnitDetailActivity::class.java).apply {
-                putExtra("UNIT_ID", student?.unitId) // Send unit ID
+                putExtra("UNIT_ID", student?.unitId)
             }
             startActivity(intent)
         }

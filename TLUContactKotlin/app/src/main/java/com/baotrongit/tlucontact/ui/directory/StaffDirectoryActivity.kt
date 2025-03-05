@@ -50,9 +50,8 @@ class StaffDirectoryActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         staffAdapter = StaffAdapter(emptyList()) { staff ->
-            // Xử lý khi người dùng nhấn vào một CBGV
             val intent = Intent(this, StaffDetailActivity::class.java).apply {
-                putExtra("STAFF_ID", staff.id) // Gửi ID của CBGV
+                putExtra("STAFF_ID", staff.id)
             }
             startActivity(intent)
         }
@@ -145,8 +144,7 @@ class StaffDirectoryActivity : AppCompatActivity() {
         binding.layoutEmpty.visibility = View.GONE
         binding.rvStaff.visibility = View.GONE
 
-        // Giả lập việc tải dữ liệu (trong thực tế có thể gọi API hoặc truy vấn database)
-        allStaff = DataProvider.getStaff() // Tạo phương thức getStaff trong DataProvider
+        allStaff = DataProvider.getStaff()
 
         binding.progressBar.visibility = View.GONE
 
@@ -157,7 +155,7 @@ class StaffDirectoryActivity : AppCompatActivity() {
             binding.layoutEmpty.visibility = View.GONE
             binding.rvStaff.visibility = View.VISIBLE
             staffAdapter.updateData(allStaff)
-            sortStaff(0) // Sắp xếp mặc định theo tên A-Z
+            sortStaff(0)
         }
 
         binding.swipeRefresh.isRefreshing = false

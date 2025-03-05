@@ -8,15 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.baotrongit.tlucontact.MainActivity
 import com.baotrongit.tlucontact.R
 import com.baotrongit.tlucontact.databinding.ActivityUnitDetailBinding
-import com.baotrongit.tlucontact.data.model.TLUUnit // Thay đổi từ Unit sang TLUUnit
-import com.baotrongit.tlucontact.data.model.UnitType
+import com.baotrongit.tlucontact.data.model.TLUUnit
 import com.baotrongit.tlucontact.utils.DataProvider
 import com.bumptech.glide.Glide
 
 class UnitDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUnitDetailBinding
-    private var unit: TLUUnit? = null // Thay đổi kiểu dữ liệu
+    private var unit: TLUUnit? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +43,6 @@ class UnitDetailActivity : AppCompatActivity() {
 
 
     private fun loadUnitDetails(unitId: String) {
-        // Trong thực tế, bạn có thể gọi API hoặc truy vấn database
         unit = DataProvider.getUnits().find { it.id == unitId }
 
         if (unit == null) {
@@ -67,8 +65,8 @@ class UnitDetailActivity : AppCompatActivity() {
         if (unit!!.logoUrl != null) {
             Glide.with(this)
                 .load(unit!!.logoUrl)
-                .placeholder(R.drawable.ic_unit) // Placeholder nếu không có hình
-                .error(R.drawable.ic_unit) // Hình ảnh hiển thị khi lỗi
+                .placeholder(R.drawable.ic_unit)
+                .error(R.drawable.ic_unit)
                 .into(binding.ivUnitLogo)
         }
 
@@ -110,7 +108,6 @@ class UnitDetailActivity : AppCompatActivity() {
     }
 
     private fun setupActionButtons() {
-        // Thiết lập các nút hành động
         binding.btnCall.setOnClickListener {
             unit?.phone?.let { phone ->
                 val intent = Intent(Intent.ACTION_DIAL).apply {

@@ -5,7 +5,9 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.baotrongit.tlucontact.data.model.UnitType
 import com.baotrongit.tlucontact.databinding.ActivityProfileBinding
+import com.baotrongit.tlucontact.utils.DataProvider
 import com.bumptech.glide.Glide
 
 class ProfileActivity : AppCompatActivity() {
@@ -20,7 +22,6 @@ class ProfileActivity : AppCompatActivity() {
 
         setupObservers()
         loadUserData()
-        setupSpinner()
         setupListeners()
     }
 
@@ -35,6 +36,9 @@ class ProfileActivity : AppCompatActivity() {
                 if (user.photoURL.isNotEmpty()) {
                     loadProfileImage(user.photoURL)
                 }
+
+                // Setup spinner after user data is loaded
+                setupSpinner(user.unitId)
             } else {
                 Toast.makeText(this, "Không tìm thấy thông tin người dùng", Toast.LENGTH_SHORT).show()
             }
@@ -56,27 +60,50 @@ class ProfileActivity : AppCompatActivity() {
         viewModel.refreshUserData()
     }
 
-    private fun setupSpinner() {
-        // Ví dụ danh sách lớp có thể được thay thế bằng danh sách từ Firestore
-        val classOptions = arrayOf("Lớp 1", "Lớp 2", "Lớp 3") // Thay thế bằng danh sách lớp thực tế
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, classOptions)
+    private fun setupSpinner(currentUnitId: String) {
+        // Get all faculties from DataProvider
+        val units = DataProvider.getUnits()
+
+        // Create a list of faculty names to display in the spinner
+        val unitOptions = units
+            .filter { it.type == UnitType.FACULTY } // Only show faculties
+            .map { it.name }
+            .toTypedArray()
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, unitOptions)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerClass.adapter = adapter
 
-        // Thiết lập giá trị chọn cho spinner nếu có
-        // Có thể lấy từ user hoặc để trống nếu chưa có
+        // Find the unit name for the current unitId
+        val unitName = units.find { it.id == currentUnitId }?.name
+
+        // Find the index of this unit name in the options and set the spinner
+        if (unitName != null) {
+            val index = unitOptions.indexOf(unitName)
+            if (index >= 0) {
+                binding.spinnerClass.setSelection(index)
+            }
+        }
     }
 
     private fun updateUserProfile() {
         val fullName = binding.etFullName.text.toString().trim()
         val phoneNumber = binding.etPhoneNumber.text.toString().trim()
         val address = binding.etAddress.text.toString().trim()
-        val classId = binding.spinnerClass.selectedItem.toString() // Lấy lớp từ spinner
+
+        // Get the selected unit name from spinner
+        val selectedUnitName = binding.spinnerClass.selectedItem.toString()
+
+        // Find the unit ID for this name
+        val unitId = DataProvider.getUnits()
+            .filter { it.type == UnitType.FACULTY }
+            .find { it.name == selectedUnitName }?.id ?: ""
+
         val position = binding.etPosition.text.toString().trim()
         val photoUrl = binding.etPhotoUrl.text.toString().trim()
 
-        // Gọi phương thức trong ViewModel để cập nhật thông tin
-        viewModel.updateUserProfile(fullName, phoneNumber, address, classId, position, photoUrl, this)
+        // Call the ViewModel to update the profile with the unitId
+        viewModel.updateUserProfile(fullName, phoneNumber, address, unitId, position, photoUrl, this)
     }
 
     private fun setupListeners() {
@@ -85,7 +112,7 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         binding.ivBackButton.setOnClickListener {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
         }
 
         binding.tvChangePhoto.setOnClickListener {

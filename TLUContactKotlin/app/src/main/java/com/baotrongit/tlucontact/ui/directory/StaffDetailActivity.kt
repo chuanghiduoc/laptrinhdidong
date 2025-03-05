@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.baotrongit.tlucontact.MainActivity
 import com.baotrongit.tlucontact.R
 import com.baotrongit.tlucontact.databinding.ActivityStaffDetailBinding
 import com.baotrongit.tlucontact.data.model.Staff
@@ -42,7 +41,6 @@ class StaffDetailActivity : AppCompatActivity() {
     }
 
     private fun loadStaffDetails(staffId: String) {
-        // Tìm cán bộ giảng viên dựa trên ID
         staff = DataProvider.getStaff().find { it.id == staffId }
 
         if (staff == null) {
@@ -78,11 +76,11 @@ class StaffDetailActivity : AppCompatActivity() {
         if (staff!!.avatarUrl != null) {
             Glide.with(this)
                 .load(staff!!.avatarUrl)
-                .placeholder(R.drawable.ic_person) // Hình mặc định
-                .error(R.drawable.ic_person) // Hình hiển thị khi lỗi
+                .placeholder(R.drawable.ic_person)
+                .error(R.drawable.ic_person)
                 .into(binding.ivStaffAvatar)
         } else {
-            binding.ivStaffAvatar.setImageResource(R.drawable.ic_person) // Hình mặc định nếu không có URL
+            binding.ivStaffAvatar.setImageResource(R.drawable.ic_person)
         }
     }
 
@@ -108,13 +106,12 @@ class StaffDetailActivity : AppCompatActivity() {
         }
 
         binding.btnWebsite.setOnClickListener {
-            // Chức năng này có thể không cần thiết cho CBGV vì không có website riêng
-            // Nếu có thể thêm một trường website cho Staff thì có thể xử lý tương tự như ở UnitDetailActivity
+
         }
 
         binding.btnUnit.setOnClickListener {
             val intent = Intent(this, UnitDetailActivity::class.java).apply {
-                putExtra("UNIT_ID", staff?.unitId) // Gửi ID của đơn vị
+                putExtra("UNIT_ID", staff?.unitId)
             }
             startActivity(intent)
         }

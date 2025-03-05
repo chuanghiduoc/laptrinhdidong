@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.baotrongit.tlucontact.R
 import com.baotrongit.tlucontact.adapter.UnitAdapter
 import com.baotrongit.tlucontact.databinding.ActivityUnitsDirectoryBinding
-import com.baotrongit.tlucontact.data.model.TLUUnit // Đổi từ Unit sang TLUUnit
+import com.baotrongit.tlucontact.data.model.TLUUnit
 import com.baotrongit.tlucontact.data.model.UnitType
 import com.baotrongit.tlucontact.utils.DataProvider
 
@@ -20,7 +20,7 @@ class UnitsDirectoryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUnitsDirectoryBinding
     private lateinit var unitAdapter: UnitAdapter
-    private var allUnits: List<TLUUnit> = emptyList() // Đổi từ Unit thành TLUUnit
+    private var allUnits: List<TLUUnit> = emptyList()
     private var currentSortOrder = SortOrder.ASCENDING
     private var currentUnitType: UnitType? = null
 
@@ -43,8 +43,9 @@ class UnitsDirectoryActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.toolbar.setNavigationOnClickListener {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
         }
+
     }
 
 
@@ -52,7 +53,7 @@ class UnitsDirectoryActivity : AppCompatActivity() {
         unitAdapter = UnitAdapter(emptyList()) { unit ->
             // Xử lý khi người dùng nhấn vào một đơn vị
             val intent = Intent(this, UnitDetailActivity::class.java).apply {
-                putExtra("UNIT_ID", unit.id) // Đảm bảo rằng unit là TLUUnit
+                putExtra("UNIT_ID", unit.id)
             }
             startActivity(intent)
         }
@@ -142,8 +143,7 @@ class UnitsDirectoryActivity : AppCompatActivity() {
         binding.layoutEmpty.visibility = View.GONE
         binding.rvUnits.visibility = View.GONE
 
-        // Giả lập việc tải dữ liệu (trong thực tế có thể gọi API hoặc truy vấn database)
-        allUnits = DataProvider.getUnits() // Đảm bảo rằng DataProvider trả về List<TLUUnit>
+        allUnits = DataProvider.getUnits()
 
         // Ẩn loading và hiển thị dữ liệu
         binding.progressBar.visibility = View.GONE

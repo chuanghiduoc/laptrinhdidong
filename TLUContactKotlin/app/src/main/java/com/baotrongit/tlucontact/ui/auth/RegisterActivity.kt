@@ -44,7 +44,11 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         binding.ivBackButton.setOnClickListener {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        binding.tvLogin.setOnClickListener {
+            finish()
         }
 
         binding.btnRegister.setOnClickListener {
@@ -61,7 +65,6 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
-        // Thêm TextWatcher để thay đổi hint cho mã cán bộ/sinh viên
         binding.etEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 

@@ -45,7 +45,7 @@ class StudentDirectoryActivity : AppCompatActivity() {
     private fun setupPermissionMessage() {
         if (UserManager.isStudent()) {
             binding.tvPermissionMessage.visibility = View.VISIBLE
-            binding.tvPermissionMessage.text = "Bạn chỉ có thể xem thông tin sinh viên cùng lớp"
+            binding.tvPermissionMessage.text = "Bạn chỉ có thể xem thông tin sinh viên cùng đơn vị"
         } else {
             binding.tvPermissionMessage.visibility = View.GONE
         }
@@ -61,9 +61,8 @@ class StudentDirectoryActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         studentAdapter = StudentAdapter(emptyList()) { student ->
-            // Handle student item click
             val intent = Intent(this, StudentDetailActivity::class.java).apply {
-                putExtra("STUDENT_ID", student.id) // Send student ID
+                putExtra("STUDENT_ID", student.id)
             }
             startActivity(intent)
         }
@@ -119,7 +118,7 @@ class StudentDirectoryActivity : AppCompatActivity() {
         binding.spinnerFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 currentUnitType = when (position) {
-                    0 -> null // All
+                    0 -> null
                     1 -> UnitType.FACULTY
                     2 -> UnitType.DEPARTMENT
                     3 -> UnitType.OFFICE
@@ -146,18 +145,18 @@ class StudentDirectoryActivity : AppCompatActivity() {
         binding.layoutEmpty.visibility = View.GONE
         binding.rvStudents.visibility = View.GONE
 
-        // Load all students from data source
         allStudents = DataProvider.getStudents()
 
-        // Apply permission filtering
-        filteredStudents = if (UserManager.isStaff()) {
-            // CBGV can see all students
+        val isStaff = UserManager.isStaff()
+        val currentUserUnitId = UserManager.getCurrentUserUnitId()
+
+
+        filteredStudents = if (isStaff) {
             allStudents
         } else {
-            // Students can only see students in the same class
-            val currentUserClassId = UserManager.getCurrentUserClassId()
-            if (currentUserClassId != null) {
-                allStudents.filter { it.classId == currentUserClassId }
+            if (currentUserUnitId != null) {
+                val filtered = allStudents.filter { it.unitId == currentUserUnitId }
+                filtered
             } else {
                 emptyList()
             }
@@ -172,11 +171,14 @@ class StudentDirectoryActivity : AppCompatActivity() {
             binding.layoutEmpty.visibility = View.GONE
             binding.rvStudents.visibility = View.VISIBLE
             studentAdapter.updateData(filteredStudents)
-            sortStudents(0) // Default sort by name A-Z
+            sortStudents(0)
         }
 
         binding.swipeRefresh.isRefreshing = false
     }
+
+
+
 
     private fun filterStudents(query: String) {
         filteredStudents = filteredStudents.filter { student ->
