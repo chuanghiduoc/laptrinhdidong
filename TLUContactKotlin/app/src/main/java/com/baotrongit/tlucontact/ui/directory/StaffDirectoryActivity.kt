@@ -7,7 +7,9 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.baotrongit.tlucontact.R
 import com.baotrongit.tlucontact.adapter.StaffAdapter
@@ -15,6 +17,7 @@ import com.baotrongit.tlucontact.databinding.ActivityStaffDirectoryBinding
 import com.baotrongit.tlucontact.data.model.Staff
 import com.baotrongit.tlucontact.data.model.UnitType
 import com.baotrongit.tlucontact.utils.DataProvider
+import kotlinx.coroutines.launch
 
 class StaffDirectoryActivity : AppCompatActivity() {
 
@@ -47,9 +50,11 @@ class StaffDirectoryActivity : AppCompatActivity() {
         }
     }
 
-
     private fun setupRecyclerView() {
-        staffAdapter = StaffAdapter(emptyList()) { staff ->
+        staffAdapter = StaffAdapter(
+            emptyList(),
+            lifecycleScope
+        ) { staff ->
             val intent = Intent(this, StaffDetailActivity::class.java).apply {
                 putExtra("STAFF_ID", staff.id)
             }
@@ -144,21 +149,31 @@ class StaffDirectoryActivity : AppCompatActivity() {
         binding.layoutEmpty.visibility = View.GONE
         binding.rvStaff.visibility = View.GONE
 
-        allStaff = DataProvider.getStaff()
+        // Use lifecycleScope to call the suspend function
+        lifecycleScope.launch {
+            try {
+                allStaff = DataProvider.getStaff()
 
-        binding.progressBar.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
 
-        if (allStaff.isEmpty()) {
-            binding.layoutEmpty.visibility = View.VISIBLE
-            binding.rvStaff.visibility = View.GONE
-        } else {
-            binding.layoutEmpty.visibility = View.GONE
-            binding.rvStaff.visibility = View.VISIBLE
-            staffAdapter.updateData(allStaff)
-            sortStaff(0)
+                if (allStaff.isEmpty()) {
+                    binding.layoutEmpty.visibility = View.VISIBLE
+                    binding.rvStaff.visibility = View.GONE
+                } else {
+                    binding.layoutEmpty.visibility = View.GONE
+                    binding.rvStaff.visibility = View.VISIBLE
+                    staffAdapter.updateData(allStaff)
+                    sortStaff(0)
+                }
+            } catch (e: Exception) {
+                binding.progressBar.visibility = View.GONE
+                binding.layoutEmpty.visibility = View.VISIBLE
+                binding.rvStaff.visibility = View.GONE
+                Toast.makeText(this@StaffDirectoryActivity, "Lỗi khi tải dữ liệu: ${e.message}", Toast.LENGTH_SHORT).show()
+            } finally {
+                binding.swipeRefresh.isRefreshing = false
+            }
         }
-
-        binding.swipeRefresh.isRefreshing = false
     }
 
     private fun filterStaff(query: String) {

@@ -15,6 +15,8 @@ import com.baotrongit.tlucontact.databinding.ActivityUnitsDirectoryBinding
 import com.baotrongit.tlucontact.data.model.TLUUnit
 import com.baotrongit.tlucontact.data.model.UnitType
 import com.baotrongit.tlucontact.utils.DataProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class UnitsDirectoryActivity : AppCompatActivity() {
 
@@ -143,24 +145,33 @@ class UnitsDirectoryActivity : AppCompatActivity() {
         binding.layoutEmpty.visibility = View.GONE
         binding.rvUnits.visibility = View.GONE
 
-        allUnits = DataProvider.getUnits()
+        // Use lifecycleScope to call the suspend function
+        lifecycleScope.launch {
+            try {
+                allUnits = DataProvider.getUnits()
 
-        // Ẩn loading và hiển thị dữ liệu
-        binding.progressBar.visibility = View.GONE
+                // Ẩn loading và hiển thị dữ liệu
+                binding.progressBar.visibility = View.GONE
 
-        if (allUnits.isEmpty()) {
-            binding.layoutEmpty.visibility = View.VISIBLE
-            binding.rvUnits.visibility = View.GONE
-        } else {
-            binding.layoutEmpty.visibility = View.GONE
-            binding.rvUnits.visibility = View.VISIBLE
-            unitAdapter.updateData(allUnits)
-            sortUnits()
+                if (allUnits.isEmpty()) {
+                    binding.layoutEmpty.visibility = View.VISIBLE
+                    binding.rvUnits.visibility = View.GONE
+                } else {
+                    binding.layoutEmpty.visibility = View.GONE
+                    binding.rvUnits.visibility = View.VISIBLE
+                    unitAdapter.updateData(allUnits)
+                    sortUnits()
+                }
+            } catch (e: Exception) {
+                // Handle error
+                binding.progressBar.visibility = View.GONE
+                binding.layoutEmpty.visibility = View.VISIBLE
+                binding.rvUnits.visibility = View.GONE
+            } finally {
+                binding.swipeRefresh.isRefreshing = false
+            }
         }
-
-        binding.swipeRefresh.isRefreshing = false
     }
-
     private fun filterUnits(query: String) {
         unitAdapter.filter(query, currentUnitType)
 

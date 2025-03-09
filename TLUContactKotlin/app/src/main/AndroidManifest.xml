@@ -3,6 +3,7 @@
     package="com.baotrongit.tlucontact">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".MyApplication"
@@ -52,10 +53,12 @@
         <activity
             android:name=".ui.directory.StudentDetailActivity"
             android:exported="false" />
-
-        <meta-data
-            android:name="com.google.android.gms.safetynet.API_KEY"
-            android:value="AIzaSyCZSA4bkv6BHdhvQjZF6da2-UjkBMrBg3s" />
+        <activity
+            android:name=".ui.directory.StaffListActivity"
+            android:exported="false" />
+<!--        <meta-data-->
+<!--            android:name="com.google.android.gms.safetynet.API_KEY"-->
+<!--            android:value="AIzaSyCZSA4bkv6BHdhvQjZF6da2-UjkBMrBg3s" />-->
     </application>
 
 </manifest>

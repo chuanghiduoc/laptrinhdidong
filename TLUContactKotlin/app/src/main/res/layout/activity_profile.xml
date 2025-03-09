@@ -105,13 +105,16 @@
                 android:layout_marginTop="8dp"
                 android:hint="URL ảnh đại diện"
                 app:endIconMode="clear_text"
-                app:startIconDrawable="@drawable/ic_link">
+                app:startIconDrawable="@drawable/ic_link"
+                app:boxStrokeColor="#2196F3"
+                app:hintTextColor="#2196F3">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPhotoUrl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textUri" />
+                    android:inputType="textUri"
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -122,7 +125,9 @@
                 android:layout_marginTop="16dp"
                 android:hint="Họ và tên"
                 app:endIconMode="clear_text"
-                app:startIconDrawable="@drawable/ic_person">
+                app:startIconDrawable="@drawable/ic_person"
+                app:boxStrokeColor="#2196F3"
+                app:hintTextColor="#2196F3">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etFullName"
@@ -139,7 +144,9 @@
                 android:layout_marginTop="16dp"
                 android:hint="Số điện thoại"
                 app:endIconMode="clear_text"
-                app:startIconDrawable="@drawable/ic_phone">
+                app:startIconDrawable="@drawable/ic_phone"
+                app:boxStrokeColor="#2196F3"
+                app:hintTextColor="#2196F3">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPhoneNumber"
@@ -156,7 +163,10 @@
                 android:layout_marginTop="16dp"
                 android:hint="Địa chỉ"
                 app:endIconMode="clear_text"
-                app:startIconDrawable="@drawable/ic_location">
+                app:startIconDrawable="@drawable/ic_location"
+                app:boxStrokeColor="#2196F3"
+                app:hintTextColor="#2196F3"
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAddress"
@@ -164,6 +174,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPostalAddress" />
             </com.google.android.material.textfield.TextInputLayout>
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilClass"
@@ -174,7 +185,9 @@
                 android:hint="Lớp (hoặc Đơn vị trực thuộc)"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tilAddress">
+                app:layout_constraintTop_toBottomOf="@+id/tilAddress"
+                app:boxStrokeColor="#2196F3"
+                app:hintTextColor="#2196F3">
 
                 <Spinner
                     android:id="@+id/spinnerClass"
@@ -190,7 +203,9 @@
                 android:layout_marginTop="16dp"
                 android:hint="Chức vụ (đối với CBGV)"
                 app:endIconMode="clear_text"
-                app:startIconDrawable="@drawable/ic_work">
+                app:startIconDrawable="@drawable/ic_work"
+                app:boxStrokeColor="#2196F3"
+                app:hintTextColor="#2196F3">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPosition"

@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.baotrongit.tlucontact.R
 import com.baotrongit.tlucontact.adapter.StudentAdapter
@@ -16,6 +17,7 @@ import com.baotrongit.tlucontact.data.model.Student
 import com.baotrongit.tlucontact.data.model.UnitType
 import com.baotrongit.tlucontact.utils.DataProvider
 import com.baotrongit.tlucontact.utils.UserManager
+import kotlinx.coroutines.launch
 
 class StudentDirectoryActivity : AppCompatActivity() {
 
@@ -60,7 +62,11 @@ class StudentDirectoryActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        studentAdapter = StudentAdapter(emptyList()) { student ->
+        // Pass lifecycleScope to the StudentAdapter
+        studentAdapter = StudentAdapter(
+            emptyList(),
+            lifecycleScope
+        ) { student ->
             val intent = Intent(this, StudentDetailActivity::class.java).apply {
                 putExtra("STUDENT_ID", student.id)
             }
@@ -145,39 +151,39 @@ class StudentDirectoryActivity : AppCompatActivity() {
         binding.layoutEmpty.visibility = View.GONE
         binding.rvStudents.visibility = View.GONE
 
-        allStudents = DataProvider.getStudents()
+        // Use lifecycleScope to call the suspend function
+        lifecycleScope.launch {
+            allStudents = DataProvider.getStudents()
 
-        val isStaff = UserManager.isStaff()
-        val currentUserUnitId = UserManager.getCurrentUserUnitId()
+            val isStaff = UserManager.isStaff()
+            val currentUserUnitId = UserManager.getCurrentUserUnitId()
 
-
-        filteredStudents = if (isStaff) {
-            allStudents
-        } else {
-            if (currentUserUnitId != null) {
-                val filtered = allStudents.filter { it.unitId == currentUserUnitId }
-                filtered
+            filteredStudents = if (isStaff) {
+                allStudents
             } else {
-                emptyList()
+                if (currentUserUnitId != null) {
+                    val filtered = allStudents.filter { it.unitId == currentUserUnitId }
+                    filtered
+                } else {
+                    emptyList()
+                }
             }
+
+            binding.progressBar.visibility = View.GONE
+
+            if (filteredStudents.isEmpty()) {
+                binding.layoutEmpty.visibility = View.VISIBLE
+                binding.rvStudents.visibility = View.GONE
+            } else {
+                binding.layoutEmpty.visibility = View.GONE
+                binding.rvStudents.visibility = View.VISIBLE
+                studentAdapter.updateData(filteredStudents)
+                sortStudents(0)
+            }
+
+            binding.swipeRefresh.isRefreshing = false
         }
-
-        binding.progressBar.visibility = View.GONE
-
-        if (filteredStudents.isEmpty()) {
-            binding.layoutEmpty.visibility = View.VISIBLE
-            binding.rvStudents.visibility = View.GONE
-        } else {
-            binding.layoutEmpty.visibility = View.GONE
-            binding.rvStudents.visibility = View.VISIBLE
-            studentAdapter.updateData(filteredStudents)
-            sortStudents(0)
-        }
-
-        binding.swipeRefresh.isRefreshing = false
     }
-
-
 
 
     private fun filterStudents(query: String) {

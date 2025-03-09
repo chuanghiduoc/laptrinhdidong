@@ -410,7 +410,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:text="Sinh viên các lớp"
+                            android:text="Sinh viên cùng khoa"
                             android:textColor="#64B5F6" />
                     </LinearLayout>
                 </LinearLayout>

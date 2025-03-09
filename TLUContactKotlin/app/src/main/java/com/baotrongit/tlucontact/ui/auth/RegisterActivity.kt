@@ -3,6 +3,7 @@ package com.baotrongit.tlucontact.ui.auth
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -53,17 +54,20 @@ class RegisterActivity : AppCompatActivity() {
 
         binding.btnRegister.setOnClickListener {
             val fullName = binding.etFullName.text.toString().trim()
-            val studentId = binding.etStudentId.text.toString().trim()
+            val profileId = binding.etStudentId.text.toString().trim()
             val email = binding.etEmail.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
             val confirmPassword = binding.etConfirmPassword.text.toString().trim()
 
+
             // Kiểm tra hợp lệ trước khi gửi
-            if (validateInputs(fullName, studentId, email, password, confirmPassword)) {
+            if (validateInputs(fullName, profileId, email, password, confirmPassword)) {
                 binding.progressBar.visibility = View.VISIBLE
-                viewModel.register(email, password, confirmPassword, fullName, studentId)
+                viewModel.register(email, password, confirmPassword, fullName, profileId)
             }
         }
+
+
 
         binding.etEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

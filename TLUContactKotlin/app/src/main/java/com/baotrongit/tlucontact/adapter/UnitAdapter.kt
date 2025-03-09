@@ -7,15 +7,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.baotrongit.tlucontact.R
-import com.baotrongit.tlucontact.data.model.TLUUnit // Đổi tên từ Unit thành TLUUnit
+import com.baotrongit.tlucontact.data.model.TLUUnit
 import com.baotrongit.tlucontact.data.model.UnitType
 
 class UnitAdapter(
-    private var units: List<TLUUnit>, // Thay đổi kiểu dữ liệu
-    private val onItemClick: (TLUUnit) -> Unit // Thay đổi kiểu dữ liệu
+    private var units: List<TLUUnit>,
+    private val onItemClick: (TLUUnit) -> Unit
 ) : RecyclerView.Adapter<UnitAdapter.UnitViewHolder>() {
 
-    private var filteredUnits: List<TLUUnit> = units // Thay đổi kiểu dữ liệu
+    private var filteredUnits: List<TLUUnit> = units
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UnitViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -29,7 +29,7 @@ class UnitAdapter(
 
     override fun getItemCount(): Int = filteredUnits.size
 
-    fun updateData(newUnits: List<TLUUnit>) { // Thay đổi kiểu dữ liệu
+    fun updateData(newUnits: List<TLUUnit>) {
         units = newUnits
         filteredUnits = newUnits
         notifyDataSetChanged()

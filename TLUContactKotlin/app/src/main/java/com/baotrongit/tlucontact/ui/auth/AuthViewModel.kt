@@ -51,7 +51,8 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun register(email: String, password: String, confirmPassword: String, fullName: String, studentId: String) {
+    fun register(email: String, password: String, confirmPassword: String, fullName: String, profileId: String
+    ) {
         // Kiểm tra định dạng email
         val emailValidation = ValidationUtils.validateEmail(email)
         if (emailValidation == EmailValidationResult.EMPTY) {
@@ -99,13 +100,13 @@ class AuthViewModel : ViewModel() {
         }
 
         // Kiểm tra mã sinh viên/cán bộ
-        if (studentId.isBlank()) {
+        if (profileId.isBlank()) {
             _registrationResult.value = Result.failure(Exception("Mã sinh viên/cán bộ không được để trống"))
             return
         }
 
         viewModelScope.launch {
-            val result = authRepository.registerUser(email, password, fullName, studentId)
+            val result = authRepository.registerUser(email, password, confirmPassword ,fullName, profileId)
             result.onSuccess {
                 _registrationResult.value = Result.success(Unit)
             }.onFailure {
@@ -113,6 +114,8 @@ class AuthViewModel : ViewModel() {
             }
         }
     }
+
+
 
     fun login(email: String, password: String) {
         if (email.isBlank() || password.isBlank()) {
@@ -123,21 +126,17 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             val result = authRepository.loginUser(email, password)
             result.onSuccess { firebaseUser ->
-//                if (firebaseUser.isEmailVerified) {
-                    val userResult = authRepository.getUserData(firebaseUser.uid)
-                    userResult.onSuccess { user ->
-                        _currentUser.value = user
-                        UserManager.initialize(user)
+                val userResult = authRepository.getUserData(firebaseUser.uid)
+                userResult.onSuccess { user ->
+                    _currentUser.value = user
+                    UserManager.initialize(user)
 
-                        // Lấy thông tin profile chi tiết
-                        loadUserProfile(user)
-                        _loginResult.value = Result.success(Unit)
-                    }.onFailure {
-                        _loginResult.value = Result.failure(it)
-                    }
-//                } else {
-//                    _loginResult.value = Result.failure(Exception("Vui lòng xác minh email trước khi đăng nhập"))
-//                }
+                    // Lấy thông tin profile chi tiết
+                    loadUserProfile(user)
+                    _loginResult.value = Result.success(Unit)
+                }.onFailure {
+                    _loginResult.value = Result.failure(it)
+                }
             }.onFailure {
                 _loginResult.value = Result.failure(it)
             }
@@ -192,7 +191,6 @@ class AuthViewModel : ViewModel() {
         _userProfile.value = null
         UserManager.clear()
     }
-
     fun updateUserProfile(
         fullName: String,
         phoneNumber: String,
@@ -230,6 +228,4 @@ class AuthViewModel : ViewModel() {
     fun isUserLoggedIn(): Boolean {
         return authRepository.getCurrentUser() != null
     }
-
-
 }

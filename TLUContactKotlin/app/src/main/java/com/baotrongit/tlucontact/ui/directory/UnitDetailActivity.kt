@@ -4,13 +4,17 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.baotrongit.tlucontact.MainActivity
 import com.baotrongit.tlucontact.R
 import com.baotrongit.tlucontact.databinding.ActivityUnitDetailBinding
 import com.baotrongit.tlucontact.data.model.TLUUnit
 import com.baotrongit.tlucontact.utils.DataProvider
+import com.baotrongit.tlucontact.utils.UserManager
 import com.bumptech.glide.Glide
+import kotlinx.coroutines.launch
 
 class UnitDetailActivity : AppCompatActivity() {
 
@@ -41,15 +45,27 @@ class UnitDetailActivity : AppCompatActivity() {
         }
     }
 
-
     private fun loadUnitDetails(unitId: String) {
-        unit = DataProvider.getUnits().find { it.id == unitId }
+        // Use lifecycleScope to call the suspend function
+        lifecycleScope.launch {
+            try {
+                // Replace getUnits().find with direct getUnitById call
+                unit = DataProvider.getUnitById(unitId)
 
-        if (unit == null) {
-            finish()
-            return
+                if (unit == null) {
+                    finish()
+                    return@launch
+                }
+
+                // Update UI with unit information
+                updateUnitUI()
+            } catch (e: Exception) {
+                finish()
+            }
         }
+    }
 
+    private fun updateUnitUI() {
         // Cập nhật UI với thông tin đơn vị
         binding.tvUnitName.text = unit!!.name
         binding.tvUnitType.text = unit!!.type.toString()
@@ -142,10 +158,16 @@ class UnitDetailActivity : AppCompatActivity() {
         }
 
         binding.btnStaff.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java).apply {
+            if (!UserManager.isStaff()) {
+                Toast.makeText(this, "Bạn không có quyền xem", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val intent = Intent(this, StaffListActivity::class.java).apply {
                 putExtra("UNIT_ID", unit?.id)
             }
             startActivity(intent)
         }
+
     }
 }

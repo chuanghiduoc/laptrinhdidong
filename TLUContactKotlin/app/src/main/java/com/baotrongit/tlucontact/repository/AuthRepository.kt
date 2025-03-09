@@ -1,14 +1,18 @@
 package com.baotrongit.tlucontact.data.repository
 
 import android.util.Log
+import com.baotrongit.tlucontact.data.model.Student
 import com.baotrongit.tlucontact.data.model.User
 import com.baotrongit.tlucontact.data.model.UserType
 import com.baotrongit.tlucontact.utils.EmailValidationResult
 import com.baotrongit.tlucontact.utils.ValidationUtils
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
 
 class AuthRepository {
@@ -21,51 +25,74 @@ class AuthRepository {
     /**
      * Đăng ký người dùng mới.
      */
+// Hàm kiểm tra định dạng email theo domain của trường
+    fun isValidEmail(email: String): Boolean {
+        val teacherRegex = Regex("^[a-zA-Z0-9._%+-]+@tlu\\.edu\\.vn$")
+        val studentRegex = Regex("^[a-zA-Z0-9._%+-]+@e\\.tlu\\.edu\\.vn$")
+        return teacherRegex.matches(email) || studentRegex.matches(email)
+    }
+
     suspend fun registerUser(
         email: String,
         password: String,
+        confirmPassword: String,
         fullName: String,
-        studentId: String
+        profileId: String? = null // Thêm tham số profileId
     ): Result<FirebaseUser> {
         return try {
-            // Tạo tài khoản người dùng mới
-            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-            val firebaseUser = authResult.user ?: return Result.failure(Exception("Đăng ký thất bại"))
-
-            // Xác định loại người dùng từ email
-            val userType = when (ValidationUtils.validateEmail(email)) {
-                EmailValidationResult.VALID_STAFF -> UserType.STAFF
-                EmailValidationResult.VALID_STUDENT -> UserType.STUDENT
-                else -> return Result.failure(Exception("Email không hợp lệ"))
+            // 1. Kiểm tra định dạng email
+            if (!isValidEmail(email)) {
+                return Result.failure(Exception("Email không hợp lệ. Vui lòng sử dụng email do trường cung cấp."))
             }
 
-            // Tạo đối tượng User
-            val user = User(
+            // 2. Kiểm tra mật khẩu và xác nhận mật khẩu
+            if (password.trim() != confirmPassword.trim()) {
+                return Result.failure(Exception("Mật khẩu và xác nhận mật khẩu không khớp."))
+            }
+            if (password.length < 6) { // Quy định về độ mạnh mật khẩu (tối thiểu 6 ký tự)
+                return Result.failure(Exception("Mật khẩu phải có ít nhất 6 ký tự."))
+            }
+
+            // 3. Xác định userType dựa trên định dạng email
+            val userType = when {
+                email.endsWith("@tlu.edu.vn", ignoreCase = true) -> UserType.STAFF
+                email.endsWith("@e.tlu.edu.vn", ignoreCase = true) -> UserType.STUDENT
+                else -> return Result.failure(Exception("Email không hợp lệ."))
+            }
+
+            // 4. Tạo tài khoản mới trên Firebase Authentication
+            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+            val firebaseUser = authResult.user ?: throw Exception("Đăng ký thất bại")
+
+            // 5. Gửi email xác minh
+            firebaseUser.sendEmailVerification().await()
+
+            // 6. Tạo đối tượng người dùng để lưu vào Firestore (bảng users)
+            val userObj = User(
                 uid = firebaseUser.uid,
                 email = email,
                 fullName = fullName,
-                photoURL = "", // Có thể để trống hoặc thêm khi có ảnh
-                phoneNumber = "",
-                address = "", // Địa chỉ có thể để trống cho đến khi cập nhật
+                photoURL = "",       // Có thể cập nhật sau nếu có ảnh đại diện
+                phoneNumber = "",    // Có thể cập nhật sau nếu cần
+                address = "",
                 userType = userType,
-//                isEmailVerified = firebaseUser.isEmailVerified,
-                isEmailVerified = true,
-                profileId = studentId, // Mã cán bộ hoặc mã sinh viên
+                isEmailVerified = false,
+                profileId = profileId ?: "",
                 createdAt = Timestamp.now(),
                 lastUpdated = Timestamp.now()
             )
 
-            // Lưu thông tin người dùng vào Firestore
-            usersCollection.document(firebaseUser.uid).set(user).await()
+            // Lưu thông tin vào bảng users
+            usersCollection.document(firebaseUser.uid).set(userObj).await()
 
-            // Gửi email xác minh
-//            firebaseUser.sendEmailVerification().await()
-
+            // 7. Trả về kết quả thành công
             Result.success(firebaseUser)
         } catch (e: Exception) {
+            Log.e("AuthRepository", "registerUser error: ${e.message}")
             Result.failure(e)
         }
     }
+
 
 
     /**

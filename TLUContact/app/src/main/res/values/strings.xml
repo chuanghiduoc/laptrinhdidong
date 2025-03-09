@@ -5,7 +5,7 @@
     <string name="settings">Settings</string>
     <string name="add_new_item">Add New Contact</string>
     <string-array name="sort_options">
-        <item>Họ và tên</item>
+        <item>Tên</item>
         <item>Địa chỉ</item>
     </string-array>
     <string name="spinner_prompt_sort">Sắp xếp theo</string>
