@@ -213,13 +213,14 @@
                         android:textStyle="bold" />
 
                     <!-- Placeholder cho biểu đồ - sẽ thay bằng thư viện biểu đồ thực tế -->
+
+                    <!-- Danh mục chi tiêu -->
                     <FrameLayout
                         android:id="@+id/chart_container"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:layout_marginTop="8dp" />
 
-                    <!-- Danh mục chi tiêu -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

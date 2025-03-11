@@ -1,0 +1,21 @@
+ <resources>
+    <string name="app_name">Scrolling Text</string>
+    <string name="article_title">Article Title</string>
+     <string name="article_subtitle">Behind That Locket: Beatles Rarities!</string>
+     <string name="article_text"><![CDATA[
+In a vault deep inside Abbey Road Studios in London – protected by an unmarked, triple-locked door – lies one of the rarest collections of Beatles recordings ever assembled.
+For more information, see the Beatles Time Capsule at www.rockument.com.\n\n
+This volume starts with the first new Beatles song, <i>Free as a Bird</i>, based on a John Lennon demo, found only on <i>The Lost Tapes</i>.\n\n
+<b>Highlights include:</b>\n
+<ul>
+<li><b>Cry for a Shadow</b> – Many a Beatle fanatic started down the outtake road, like I did, with a first listen to this track.</li>
+<li><b>My Bonnie</b> and <b>Ain\'t She Sweet</b> – At the same session, the Beatles played <i>My Bonnie</i> (the first single).</li>
+<li><b>Searching</b> – A Jerry Leiber & Mike Stoller comedy song that was a hit for the Coasters in 1957.</li>
+<li><b>Love Me Do</b> – An early version of the song, played a bit slower and with more of a blues feeling.</li>
+<li><b>She Loves You</b> – Till There Was You – Twist and Shout – Live at the Princess Wales Theatre by Leicester Square.</li>
+<li><b>Leave My Kitten Alone</b> – One of the lost Beatle songs recorded during the <i>Beatles For Sale</i> sessions.</li>
+<li><b>One After 909</b> – A song recorded for the <i>Let It Be</i> album but actually worked on way back in the beginning.</li>
+</ul>
+]]></string>
+
+ </resources>
