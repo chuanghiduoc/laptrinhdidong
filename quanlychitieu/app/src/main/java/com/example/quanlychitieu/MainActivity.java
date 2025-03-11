@@ -1,20 +1,23 @@
 package com.example.quanlychitieu;
 
 import android.os.Bundle;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.quanlychitieu.databinding.ActivityMainBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private NavController navController;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,31 +26,99 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Lấy NavController từ NavHostFragment
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_activity_main);
 
-        if (navHostFragment != null) {
-            NavController navController = navHostFragment.getNavController();
-
-            // Bỏ dòng setupActionBarWithNavController
-            // Chỉ thiết lập Bottom Navigation với NavController
-            NavigationUI.setupWithNavController(binding.navView, navController);
-
-            // Thiết lập FloatingActionButton nếu có
-            FloatingActionButton fab = binding.fabAddTransaction;
-            if (fab != null) {
-                fab.setOnClickListener(view -> {
-                    // Xử lý khi người dùng nhấn nút thêm giao dịch
-                    // Ví dụ: navController.navigate(R.id.action_to_add_transaction);
-                });
-            }
-
-            if (binding.toolbar != null) {
-                navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-                    binding.toolbar.setTitle(destination.getLabel());
-                });
-            }
+        if (navHostFragment == null) {
+            return;
         }
+
+        navController = navHostFragment.getNavController();
+
+        // Define top-level destinations
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_dashboard,
+                R.id.navigation_transactions,
+                R.id.navigation_budget,
+                R.id.navigation_statistics,
+                R.id.navigation_reminders
+        ).build();
+
+        BottomNavigationView navView = binding.navView;
+
+        // Setup improved bottom navigation handling
+        setupBottomNavigation(navView);
+
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            // Show FAB only on certain screens
+            if (destination.getId() == R.id.navigation_dashboard ||
+                    destination.getId() == R.id.navigation_transactions) {
+                binding.fabAddTransaction.show();
+            } else {
+                binding.fabAddTransaction.hide();
+            }
+        });
+
+        // Setup FAB click listener
+        binding.fabAddTransaction.setOnClickListener(v -> {
+            // Navigate to add transaction screen
+            if (navController.getCurrentDestination() != null) {
+                if (navController.getCurrentDestination().getId() == R.id.navigation_dashboard) {
+                    try {
+                        navController.navigate(R.id.action_dashboard_to_add_transaction);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Navigation failed: " + e.getMessage());
+                    }
+                } else if (navController.getCurrentDestination().getId() == R.id.navigation_transactions) {
+                    try {
+                        navController.navigate(R.id.action_transactions_to_add_transaction);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Navigation failed: " + e.getMessage());
+                    }
+                }
+            }
+        });
+    }
+
+    private void setupBottomNavigation(BottomNavigationView bottomNavigationView) {
+        // Set up bottom navigation with NavController
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+
+        // Handle reselection properly
+        bottomNavigationView.setOnItemReselectedListener(item -> {
+            int itemId = item.getItemId();
+
+            // When re-selecting the current tab, pop the back stack to the start destination
+            if (navController.getCurrentDestination() != null &&
+                    navController.getCurrentDestination().getId() == itemId) {
+                // Pop back stack to the start destination of this tab
+                navController.popBackStack(itemId, false);
+            }
+        });
+
+        // Handle item selection with proper back stack handling
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            // Handle navigation with proper back stack management
+            int itemId = item.getItemId();
+
+            // Check if we're navigating to a top-level destination
+            if (itemId == R.id.navigation_dashboard ||
+                    itemId == R.id.navigation_transactions ||
+                    itemId == R.id.navigation_budget ||
+                    itemId == R.id.navigation_statistics ||
+                    itemId == R.id.navigation_reminders) {
+
+                // Pop back stack to the start destination if needed
+                if (navController.getCurrentDestination() != null &&
+                        navController.getCurrentDestination().getId() != itemId) {
+                    navController.popBackStack(itemId, false);
+                }
+
+                // Navigate to the selected destination
+                return NavigationUI.onNavDestinationSelected(item, navController);
+            }
+
+            return false;
+        });
     }
 }

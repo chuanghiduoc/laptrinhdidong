@@ -27,7 +27,10 @@
         android:name="com.example.quanlychitieu.ui.transactions.TransactionsFragment"
         android:label="Giao dịch"
         tools:layout="@layout/fragment_transactions">
-
+        <argument
+            android:name="fromDashboard"
+            app:argType="boolean"
+            android:defaultValue="false" />
         <action
             android:id="@+id/action_transactions_to_add_transaction"
             app:destination="@id/navigation_add_edit_transaction" />

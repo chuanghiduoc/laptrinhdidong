@@ -4,16 +4,61 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.quanlychitieu.data.model.Transaction;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class DashboardViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private final MutableLiveData<Double> income = new MutableLiveData<>();
+    private final MutableLiveData<Double> expenses = new MutableLiveData<>();
+    private final MutableLiveData<Double> balance = new MutableLiveData<>();
+    private final MutableLiveData<List<Transaction>> recentTransactions = new MutableLiveData<>();
 
     public DashboardViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        // Load initial data
+        loadFinancialData();
+        loadRecentTransactions();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    private void loadFinancialData() {
+        // In a real app, this would come from a repository
+        double incomeValue = 5000000;
+        double expensesValue = 3200000;
+        double balanceValue = incomeValue - expensesValue;
+
+        income.setValue(incomeValue);
+        expenses.setValue(expensesValue);
+        balance.setValue(balanceValue);
+    }
+
+    private void loadRecentTransactions() {
+        // In a real app, this would come from a repository
+        List<Transaction> transactions = new ArrayList<>();
+
+        // Add some sample transactions
+        transactions.add(new Transaction(1, "Ăn trưa", -75000, "Ăn uống", new Date()));
+        transactions.add(new Transaction(2, "Xăng xe", -150000, "Di chuyển", new Date()));
+        transactions.add(new Transaction(3, "Lương tháng 3", 5000000, "Thu nhập", new Date()));
+
+        recentTransactions.setValue(transactions);
+    }
+
+    public LiveData<Double> getIncome() {
+        return income;
+    }
+
+    public LiveData<Double> getExpenses() {
+        return expenses;
+    }
+
+    public LiveData<Double> getBalance() {
+        return balance;
+    }
+
+    public LiveData<List<Transaction>> getRecentTransactions() {
+        return recentTransactions;
     }
 }
