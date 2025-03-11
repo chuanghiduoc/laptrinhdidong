@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Quản lý chi tiêu"
+rootProject.name = "quanlychitieu"
 include(":app")
  
